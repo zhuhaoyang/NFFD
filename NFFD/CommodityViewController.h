@@ -7,7 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <QuartzCore/QuartzCore.h>
 
-@interface CommodityViewController : UIViewController
+@interface CommodityViewController : UIViewController{
+    BOOL isHide;
+    UIView *thumbnailView;
+    UIButton *btHide;
+}
 
 @end

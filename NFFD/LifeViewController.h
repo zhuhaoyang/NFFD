@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
-@interface LifeViewController : UIViewController
+@interface LifeViewController : UIViewController<UIScrollViewDelegate>{
+    UIScrollView *m_scrollView;
+}
 
 @end

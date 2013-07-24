@@ -7,7 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
-
-@interface EveryMomentViewController : UIViewController
+#import "CommodityViewController.h"
+@interface EveryMomentViewController : UIViewController<UIScrollViewDelegate>{
+    UIScrollView *m_scrollView;
+}
 
 @end

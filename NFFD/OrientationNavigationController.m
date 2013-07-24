@@ -15,17 +15,22 @@
 
 @implementation OrientationNavigationController
 
--(void)dealloc
-{
-    [super dealloc];
-}
+//-(void)dealloc
+//{
+//    [super dealloc];
+//}
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
 }
 
-
+- (UIViewController *)popViewControllerAnimated:(BOOL)animated
+{
+//    [super popViewControllerAnimated:YES];
+    [[NSNotificationCenter defaultCenter]postNotificationName:@"showToolbar" object:nil];
+    return [super popViewControllerAnimated:YES];
+}
 
 #pragma mark-支持自动转屏
 -(NSUInteger)supportedInterfaceOrientations
