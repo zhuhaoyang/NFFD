@@ -10,6 +10,7 @@
 #import "EveryMomentViewController.h"
 #import "LifeViewController.h"
 #import "OrientationNavigationController.h"
+//#import "ShoppingViewController.h"
 //#import "OrientationTabBarController.h"
 @interface ViewController : UIViewController<UITabBarControllerDelegate>
 {
@@ -17,12 +18,17 @@
     NSTimer *timer;
     EveryMomentViewController *m_EveryMomentViewController;
     LifeViewController *m_LifeViewController;
-    OrientationNavigationController *nav;
+    OrientationNavigationController *nav1;
+    OrientationNavigationController *nav2;
+//    ShoppingViewController *m_ShoppingViewController;
 //    OrientationTabBarController *tabBarController;
     UIToolbar *toolbar;
     NSInteger selectedTab;
+    UIImageView *triangle;
+    UIButton *btShopping;
 }
-@property(nonatomic,retain)OrientationNavigationController *nav;
+@property(nonatomic,retain)OrientationNavigationController *nav1;
+@property(nonatomic,retain)OrientationNavigationController *nav2;
 @property(nonatomic,retain)LifeViewController *m_LifeViewController;
 @property(nonatomic,retain)UIToolbar *toolbar;
 //@property(nonatomic) NSInteger selectedTab;

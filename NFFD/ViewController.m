@@ -23,6 +23,7 @@
 //    self.view.autoresizingMask = UIViewAutoresizingFlexibleWidth;//   esSubviews=YES;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hideToolbar) name:@"hideToolbar" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showToolbar) name:@"showToolbar" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fadeScreen) name:@"fadeScreen" object:nil];
 
     if (1) {
 //        [[UIApplication sharedApplication]setStatusBarHidden:YES withAnimation:UIStatusBarAnimationNone];
@@ -30,10 +31,12 @@
         startLoge.frame = CGRectMake(0, 0, 1024, 768);
         
         [self.view addSubview:startLoge];
-        
+        [self.view bringSubviewToFront:startLoge];
         timer = [NSTimer scheduledTimerWithTimeInterval: 1
                                                  target: self
-                                               selector: @selector(fadeScreen)
+//                                               selector: @selector(fadeScreen)
+                                               selector: @selector(showMain)
+
                                                userInfo: nil repeats: NO];
     }else {
         [self showMain];
@@ -45,22 +48,23 @@
 - (void) fadeScreen
 {
 	[UIView beginAnimations: nil context: nil];
-	[UIView setAnimationDuration: 0.1f];
+	[UIView setAnimationDuration: 0.1];
 	[UIView setAnimationDelegate: self];
 	[UIView setAnimationDidStopSelector: @selector(finishedFading)];
-	self.view.alpha = 0;
+	startLoge.alpha = 0;
 	[UIView commitAnimations];
 }
 
 - (void) finishedFading
 {
 	[UIView beginAnimations: nil context: nil];
-	[UIView setAnimationDuration: 0.1f];
-	self.view.alpha = 1.0;
+	[UIView setAnimationDuration: 0.1];
+	self.nav1.view.alpha = 1.0;
+    self.toolbar.alpha = 1.0;
 	[UIView commitAnimations];
 	[startLoge removeFromSuperview];
     
-    [self showMain];
+//    [self showMain];
 }
 
 - (void)showMain
@@ -72,59 +76,106 @@
 //    [self.toolbar setBackgroundImage:[UIImage imageNamed:@"toolbar"] forToolbarPosition:UIToolbarPositionAny barMetrics:UIBarMetricsLandscapePhone];
 //    [self.toolbar setTintColor:[UIColor colorWithRed:0.612 green:0.573 blue:0.490 alpha:1]];
     [self.toolbar setBackgroundImage:[UIImage imageNamed:@"toolbar"] forToolbarPosition:UIToolbarPositionAny barMetrics:UIBarMetricsDefault];
-    UIBarButtonItem *bt1 = [[UIBarButtonItem alloc]initWithTitle:@"每时每刻" style:UIBarButtonItemStylePlain target:self action:@selector(clickBt1)];
-    UIBarButtonItem *bt2 = [[UIBarButtonItem alloc]initWithTitle:@"生活方式" style:UIBarButtonItemStylePlain target:self action:@selector(clickBt2)];
-    NSArray *arrItems = [[NSArray alloc]initWithObjects:bt1,bt2, nil];
-    [self.toolbar setItems:arrItems];
-    m_EveryMomentViewController = [[EveryMomentViewController alloc]initWithNibName:@"EveryMomentViewController" bundle:nil];
-    self.nav = [[OrientationNavigationController alloc]initWithRootViewController:m_EveryMomentViewController];
-    self.nav.view.frame = CGRectMake(0, 0, 1024, 768-49-20);
-//    [self.nav.navigationBar setTintColor:[UIColor colorWithRed:0.612 green:0.573 blue:0.490 alpha:1]];
-    [self.nav.navigationBar setBackgroundImage:[UIImage imageNamed:@"nav"] forBarMetrics:UIBarMetricsDefault];
-//    self.nav.view.frame = [[UIScreen mainScreen] bounds];
-    self.m_LifeViewController = [[LifeViewController alloc]initWithNibName:@"LifeViewController" bundle:nil];
-    
-    [self.view addSubview:self.nav.view];
-    [self.view addSubview:self.toolbar];
-//    NSLog(@"%@",self.nav.view);
-//    tabBarController = [[OrientationTabBarController alloc]init];
-//    tabBarController.delegate = self;
-//    tabBarController.view.frame =CGRectMake(0, 0, 1024, 768-20);
+//    UIBarButtonItem *bt1 = [[UIBarButtonItem alloc]initWithTitle:@"我的最爱" style:UIBarButtonItemStylePlain target:self action:@selector(clickBt1)];
+    UIButton *bt2 = [UIButton buttonWithType:UIButtonTypeCustom];
+    [bt2 setImage:[UIImage imageNamed:@"tab1"] forState:UIControlStateNormal];
+    bt2.frame = CGRectMake(153, 0, 123, 49);
+    [bt2 addTarget:self action:@selector(clickBt2) forControlEvents:UIControlEventTouchUpInside];
+    [self.toolbar addSubview:bt2];
 
-//    tabBarController.tabBar.frame = CGRectMake(0, 1024-49, 720, 49);
-//    tabBarController.viewControllers = @[nav,m_LifeViewController];
-//    [self.view addSubview:tabBarController.view];
+    UIButton *bt1 = [UIButton buttonWithType:UIButtonTypeCustom];
+    [bt1 setImage:[UIImage imageNamed:@"tab2"] forState:UIControlStateNormal];
+    bt1.frame = CGRectMake(20, 0, 123, 49);
+    [bt1 addTarget:self action:@selector(clickBt1) forControlEvents:UIControlEventTouchUpInside];
+    [self.toolbar addSubview:bt1];
+
+//    NSArray *arrItems = [[NSArray alloc]initWithObjects:bt1,bt2, nil];
+//    [self.toolbar setItems:arrItems];
+//    NSLog(@"%@ %@",bt1.customView,bt2.customView);
+    triangle = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"triangle"]];
+    triangle.frame = CGRectMake(60, 0, 22, 12);
+    [self.toolbar addSubview:triangle];
     
+//    btShopping = [UIButton buttonWithType:UIButtonTypeCustom];
+//    [btShopping setImage:[UIImage imageNamed:@"shopping1"] forState:UIControlStateNormal];
+//    [btShopping addTarget:self action:@selector(shopping) forControlEvents:UIControlEventTouchUpInside];
+//    btShopping.frame = CGRectMake(0, 0, 60, 30);
+////    [self.toolbar addSubview:btShopping];
+//    UIBarButtonItem *rightButton = [[UIBarButtonItem alloc]initWithCustomView:btShopping];
+//    [self.navigationItem setRightBarButtonItem:rightButton];
+
     
-//    NSMutableArray *tabBarItems = [[[[self.view subviews] objectAtIndex:1] subviews] mutableCopy];
-//    
-//    for (int item = 0; item < [tabBarItems count]; item++) {
-//        for (int subview = 0; subview < [[[tabBarItems objectAtIndex:item] subviews] count]; subview++) {
-//            if ([[[[tabBarItems objectAtIndex:item] subviews] objectAtIndex:subview] isKindOfClass:NSClassFromString(@"UITabBarButtonLabel")]) {
-//                [[[[tabBarItems objectAtIndex:item] subviews] objectAtIndex:subview] setFont:[UIFont systemFontOfSize:6.0f]];
-//                [[[[tabBarItems objectAtIndex:item] subviews] objectAtIndex:subview] setFrame: CGRectMake(0, 0, 30, 30)];
-////                 [[[[tabBarItems objectAtIndex:item] subviews] objectAtIndex:subview] setTextAlignment:UITextAlignmentCenter];
-//                 }
-//                 }
-//                 }
+    m_LifeViewController = [[LifeViewController alloc]initWithNibName:@"LifeViewController" bundle:nil];
+    self.nav1 = [[OrientationNavigationController alloc]initWithRootViewController:m_LifeViewController];
+    self.nav1.view.frame = CGRectMake(0, 0, 1024, 768-49-20);
+    //    [self.nav.navigationBar setTintColor:[UIColor colorWithRed:0.612 green:0.573 blue:0.490 alpha:1]];
+    [self.nav1.navigationBar setBackgroundImage:[UIImage imageNamed:@"nav"] forBarMetrics:UIBarMetricsDefault];
     
-}
+    m_EveryMomentViewController = [[EveryMomentViewController alloc]initWithNibName:@"EveryMomentViewController" bundle:nil];
+    self.nav2 = [[OrientationNavigationController alloc]initWithRootViewController:m_EveryMomentViewController];
+    self.nav2.view.frame = CGRectMake(0, 0, 1024, 768-49-20);
+//    [self.nav.navigationBar setTintColor:[UIColor colorWithRed:0.612 green:0.573 blue:0.490 alpha:1]];
+    [self.nav2.navigationBar setBackgroundImage:[UIImage imageNamed:@"nav"] forBarMetrics:UIBarMetricsDefault];
+//    self.nav.view.frame = [[UIScreen mainScreen] bounds];
+    
+    self.nav1.view.alpha = 0;
+    self.toolbar.alpha = 0;
+    [self.view addSubview:self.nav1.view];
+    [self.view addSubview:self.toolbar];
+//    [m_EveryMomentViewController load];
+    }
+
+//- (void)shopping
+//{
+//    m_ShoppingViewController = [[ShoppingViewController alloc]initWithNibName:@"ShoppingViewController" bundle:nil];
+//    [self.nav pushViewController:m_ShoppingViewController animated:YES];
+//
+//   
+//}
 
 - (void)clickBt1
 {
     if (selectedTab == 2) {
-        [self.m_LifeViewController.view removeFromSuperview];
-        [self.view addSubview:self.nav.view];
+        [self.nav2.view removeFromSuperview];
+        [self.view addSubview:self.nav1.view];
         [self.view bringSubviewToFront:self.toolbar];
+        
+        CGContextRef context = UIGraphicsGetCurrentContext();
+        [UIView beginAnimations:nil context:context];
+        [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
+        [UIView setAnimationDuration:0.3];
+        triangle.frame = CGRectMake(60, 0, 22, 12);
+        [UIView setAnimationDelegate:self];
+        [UIView commitAnimations];
+        
+        btShopping.alpha = 0;
+        btShopping.enabled = NO;
+        
+
         selectedTab = 1;
     }
 }
 - (void)clickBt2
 {
     if (selectedTab == 1) {
-        [self.nav.view removeFromSuperview];
-        [self.view addSubview:self.m_LifeViewController.view];
+                
+        [self.nav1.view removeFromSuperview];
+        [self.view addSubview:self.nav2.view];
         [self.view bringSubviewToFront:self.toolbar];
+        
+        CGContextRef context = UIGraphicsGetCurrentContext();
+        [UIView beginAnimations:nil context:context];
+        [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
+        [UIView setAnimationDuration:0.3];
+
+        triangle.frame = CGRectMake(193, 0, 22, 12);
+
+        [UIView setAnimationDelegate:self];
+        [UIView commitAnimations];
+        
+        btShopping.alpha = 1;
+        btShopping.enabled = YES;
+
         selectedTab = 2;
     }
 }
@@ -145,15 +196,22 @@
     return YES;
 }
 
-- (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration NS_AVAILABLE_IOS(3_0)//当发送旋屏事件后，就会掉用该方法
+//- (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration NS_AVAILABLE_IOS(3_0)//当发送旋屏事件后，就会掉用该方法
+//{
+//    [self setMyLayout];
+//}
+//为了兼容IOS6以前的版本而保留的方法
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
 {
-    [self setMyLayout];
+//    return (toInterfaceOrientation == UIInterfaceOrientationMaskLandscape);
+    BOOL b = (toInterfaceOrientation == UIDeviceOrientationLandscapeLeft || toInterfaceOrientation == UIDeviceOrientationLandscapeRight);
+    return b;//即在IOS6.0以下版本，支持所用方向的旋屏
 }
 
 - (void)setMyLayout
 {
 //    self.view.frame = CGRectMake(0, 0, 748, 1024);
-    self.nav.view.frame = CGRectMake(0, 0, 1024, 768-49-20);
+//    self.nav.view.frame = CGRectMake(0, 0, 1024, 768-49-20);
 //    self.toolbar.frame = CGRectMake(0, 768-20-49, 1024, 49);
 //    NSLog(@"NAV = %@",self.nav.view);
 //    NSLog(@"VIEW = %@",self.view);
@@ -173,7 +231,7 @@
 - (void)showToolbar
 {
     self.toolbar.frame = CGRectMake(0, 768-20-49, 1024, 49);
-    self.nav.view.frame = CGRectMake(0, 0, 1024, 768-20-49);
+    self.nav2.view.frame = CGRectMake(0, 0, 1024, 768-20-49);
 
 }
 
@@ -181,5 +239,7 @@
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"hideToolbar" object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"showToolbar" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"fadeScreen" object:nil];
+
 }
 @end
