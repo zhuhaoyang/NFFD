@@ -55,7 +55,7 @@
                                              cancelButtonTitle:@"确认"
                                              otherButtonTitles:nil];
         [alert show];
-        
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"oid"];
     }else{
         if ([[[items objectAtIndex:0] stringValue] isEqualToString:@"1"]) {
 
@@ -82,6 +82,7 @@
                                                  cancelButtonTitle:@"确认"
                                                  otherButtonTitles:nil];
             [alert show];
+            [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"oid"];
         }
         
     }

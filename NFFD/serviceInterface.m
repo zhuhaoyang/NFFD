@@ -13,7 +13,7 @@
 //- (GDataXMLElement *)creatRequestBody:(NSDictionary*)aDic key:(NSString *)key;
 - (void)parseResponseData:(NSString *)xml;
 - (void)passDataOutWithError:(Error*)error;
-
+- (void)start;
 @end
 
 
@@ -90,39 +90,69 @@
 //    
 //    return [outputStr stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
 //}
+-(void)sendRequestForPOSTWithData:(NSDictionary*)dic addr:(NSString *)addr
+{
+    NSString *theServerAddr	= @"http://119.37.199.212/api/";
+    //拼凑请求地址
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@",theServerAddr,addr]];
+    m_request = [[ASIFormDataRequest alloc] initWithURL:url];
+    [m_request addRequestHeader:@"Content-type" value:@"application/octet-stream"];
+    NSArray *arrKeys = [dic allKeys];
+    
+    for (NSString *key in arrKeys) {
+        [m_request setPostValue:[dic objectForKey:key] forKey:key];
+    }
+    [m_request setRequestMethod:@"POST"]; // set post method
+    [m_request setTimeOutSeconds:kTimeOutDuration]; // set time out duration
+    [m_request setDelegate:self];
+    [self start];
+    //    [request setPostValue:[[[AppDelegate App].orderDetalArray objectAtIndex:0] objectForKey:@"oid"] forKey:@"oid"];
+    //    [request setPostValue:[NSString stringWithFormat:@"%0.2f",value] forKey:@"cost"];
+    //    [request setPostValue:addressField.text forKey:@"addr"];
+    //    [request setPostValue:telField.text forKey:@"tel"];
+    //    [request setPostValue:nameField.text forKey:@"man"];
+    //    [request setPostValue:mobileField.text forKey:@"mobile"];
+    //    [request setPostValue:[NSString stringWithFormat:@"%d",selectAct] forKey:@"type"];
+    //    [request setPostValue:MarkField.text forKey:@"mark"];
+    //    [request setShouldStreamPostDataFromDisk:YES];
+    //    [request setDelegate:self];
+    //    [request setRequestMethod:@"POST"];
+    //    [request setTimeOutSeconds:100];
+    //    [request setDidFinishSelector:@selector(uploadFinished:)];
+    //    [request setDidFailSelector:@selector(uploadFailed:)];
+    //    [request startAsynchronous];
+    
+    
+  }
+
+
+
 -(void)sendRequestWithData:(NSString*)str addr:(NSString *)addr
 {
-//	if (nil == m_request)
-//	{
-        //        UITextView *tx;
-		//服务器地址
-//        register?username=TIM&password=hello123&email=tim0405@gmail.com&phonenumber=1357
-//		NSString *theServerAddr	= @"http://shen1d.tingso.com/api/";
-//        NSString *theServerAddr	= @"http://192.168.1.240/nffd/api/";
-        NSString *theServerAddr	= @"http://119.37.199.212/api/";
+    NSString *theServerAddr	= @"http://119.37.199.212/api/";
+    //拼凑请求地址
+    NSString *httpStr;
+    if (str == nil) {
+        httpStr = [[[NSString alloc] initWithFormat:@"%@%@",theServerAddr,addr] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    }else{
+        httpStr = [[[NSString alloc] initWithFormat:@"%@%@%@",theServerAddr,addr,str] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    }
 
-		//[[SystemSetting shareInstance] getServerUrl];
-		//拼凑请求地址
-        NSString *httpStr;
-        if (str == nil) {
-            httpStr = [[[NSString alloc] initWithFormat:@"%@%@",theServerAddr,addr] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-        }else{
-            httpStr = [[[NSString alloc] initWithFormat:@"%@%@%@",theServerAddr,addr,str] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-        }
+    NSURL *url = [NSURL URLWithString:httpStr];
 
-		NSURL *url = [NSURL URLWithString:httpStr];
-//		NSURL *url = [NSURL URLWithString:@"http://www.shen1d.com/test/try_login.php?password=jy01902848&email=182196875@qq.com"];
-    
-//    [aString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    
-    
-		// Initialization the http engine (required)
-		m_request = [[ASIFormDataRequest alloc] initWithURL:url];
-		[m_request setRequestMethod:@"POST"]; // set post method
-		[m_request setTimeOutSeconds:kTimeOutDuration]; // set time out duration
-		[m_request setDelegate:self];
-        NSLog(@"required = %@",httpStr);
 
+    // Initialization the http engine (required)
+    m_request = [[ASIFormDataRequest alloc] initWithURL:url];
+    [m_request setRequestMethod:@"GET"]; // set post method
+    [m_request setTimeOutSeconds:kTimeOutDuration]; // set time out duration
+    [m_request setDelegate:self];
+    NSLog(@"required = %@",httpStr);
+    [self start];
+}
+
+- (void)start
+{
+    
 	switch (m_requestMode)
 	{
 		case TRequestMode_Synchronous:
@@ -132,18 +162,18 @@
 			NSError *error = [m_request error];
 			if (!error)
 			{
-//				NSString *sReponse = [m_request responseString];
-//				[self parseResponseData:sReponse];
-//				[self passDataOutWithError:m_error];
+                //				NSString *sReponse = [m_request responseString];
+                //				[self parseResponseData:sReponse];
+                //				[self passDataOutWithError:m_error];
 			}
 			else
 			{
 				if (nil != m_arrReceiveData)
 				{
-//					SAFE_RELEASE(m_dicReceiveData);
+                    //					SAFE_RELEASE(m_dicReceiveData);
 				}
-//				m_error.m_NSError = error;
-//				[self passDataOutWithError:m_error];
+                //				m_error.m_NSError = error;
+                //				[self passDataOutWithError:m_error];
 			}
 			break;
 		}
@@ -154,6 +184,7 @@
 			break;
 		}
 	}
+
 }
 
 // Create the body

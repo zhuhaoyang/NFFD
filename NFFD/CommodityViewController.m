@@ -142,11 +142,11 @@
     [btClose addTarget:self action:@selector(closeDetail) forControlEvents:UIControlEventTouchUpInside];
     [detailView addSubview:btClose];
     
-    btShare = [UIButton buttonWithType:UIButtonTypeCustom];
-    [btShare setImage:[UIImage imageNamed:@"share"] forState:UIControlStateNormal];
-    btShare.frame = CGRectMake(1024-8-50, 44+8, 50, 50);
-    [btShare addTarget:self action:@selector(share) forControlEvents:UIControlEventTouchUpInside];
-    [detailView addSubview:btShare];
+//    btShare = [UIButton buttonWithType:UIButtonTypeCustom];
+//    [btShare setImage:[UIImage imageNamed:@"share"] forState:UIControlStateNormal];
+//    btShare.frame = CGRectMake(1024-8-50, 44+8, 50, 50);
+//    [btShare addTarget:self action:@selector(share) forControlEvents:UIControlEventTouchUpInside];
+//    [detailView addSubview:btShare];
     
     imageProduct = [[UIImageView alloc]initWithFrame:CGRectMake(76-40, 44+85, 382, 359)];
     [detailView addSubview:imageProduct];
@@ -210,11 +210,11 @@
     [detailView addSubview:textField];
     
     btBuy = [UIButton buttonWithType:UIButtonTypeCustom];
-    [btBuy setImage:[UIImage imageNamed:@"buy"] forState:UIControlStateNormal];
-    [btBuy addTarget:self action:@selector(buy) forControlEvents:UIControlEventTouchUpInside];
-    btBuy.frame = CGRectMake(76+382+76-80, 44+85+359-52, 146, 52);
+    btBuy.frame = CGRectMake(76+382+76-80, 44+85+359-52, 175, 50);
+    [btBuy setImage:[UIImage imageNamed:@"shopping"] forState:UIControlStateNormal];
+    [btBuy addTarget:self action:@selector(shopping:) forControlEvents:UIControlEventTouchUpInside];
     [detailView addSubview:btBuy];
-    
+
     webView = [[UIWebView alloc]initWithFrame:CGRectMake(650, 20+88, 1024-750, 400)];
     webView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0];
 //    webView.scalesPageToFit=YES;
@@ -222,20 +222,25 @@
     [(UIScrollView *)[[webView subviews] objectAtIndex:0]    setBounces:NO];
 //    NSLog(@"%@",[webView subviews]);
     
-    shareView = [[UIImageView alloc]initWithFrame:CGRectMake(1024-8-178, 44+8, 179, 97)];
-    shareView.image = [UIImage imageNamed:@"border"];
     
-    btShopping = [UIButton buttonWithType:UIButtonTypeCustom];
-    [btShopping setImage:[UIImage imageNamed:@"shopping"] forState:UIControlStateNormal];
-    btShopping.frame = CGRectMake(1024-8-178+(179-136)/2, 44+8+20, 136, 25);
-    [btShopping addTarget:self action:@selector(shopping:) forControlEvents:UIControlEventTouchUpInside];
-    //    [detailView addSubview:btShopping];
     
-    btWeibo = [UIButton buttonWithType:UIButtonTypeCustom];
-    [btWeibo setImage:[UIImage imageNamed:@"weibo"] forState:UIControlStateNormal];
-    btWeibo.frame = CGRectMake(1024-8-178 + (179-136)/2,44+8+55, 136, 25);
-    [btWeibo addTarget:self action:@selector(weibo:) forControlEvents:UIControlEventTouchUpInside];
-    //    [detailView addSubview:btWeibo];
+//    btShopping = [UIButton buttonWithType:UIButtonTypeCustom];
+//    [btShopping setImage:[UIImage imageNamed:@"shopping"] forState:UIControlStateNormal];
+//    btShopping.frame = CGRectMake(1024-8-178+(179-136)/2, 44+8+20, 136, 25);
+//    [btShopping addTarget:self action:@selector(shopping:) forControlEvents:UIControlEventTouchUpInside];
+//    //    [detailView addSubview:btShopping];
+    
+//    shareView = [[UIImageView alloc]initWithFrame:CGRectMake(1024-8-178, 44+8, 179, 97/2)];
+//    shareView.layer.cornerRadius = 12;
+//    shareView.layer.masksToBounds = YES;
+//    shareView.backgroundColor = [UIColor blackColor];
+//    [detailView addSubview:shareView];
+
+//    btWeibo = [UIButton buttonWithType:UIButtonTypeCustom];
+//    [btWeibo setImage:[UIImage imageNamed:@"weibo"] forState:UIControlStateNormal];
+//    btWeibo.frame = CGRectMake(1024-190, 44+8+20-20, 62, 48);
+//    [btWeibo addTarget:self action:@selector(weibo:) forControlEvents:UIControlEventTouchUpInside];
+//    [detailView addSubview:btWeibo];
     
     
     SinaWeibo *sinaweibo = [self sinaweibo];
@@ -265,6 +270,12 @@
     [backButton addTarget:self action:@selector(back) forControlEvents:UIControlEventTouchUpInside];
     UIBarButtonItem *liftButton = [[UIBarButtonItem alloc]initWithCustomView:backButton];
     [self.navigationItem setLeftBarButtonItem:liftButton];
+    UIButton *btWeibo = [UIButton buttonWithType:UIButtonTypeCustom];
+    btWeibo.frame = CGRectMake(0, 0, 60, 30);
+    [btWeibo setBackgroundImage:[UIImage imageNamed:@"btWeibo"] forState:UIControlStateNormal];
+    [btWeibo addTarget:self action:@selector(weibo:) forControlEvents:UIControlEventTouchUpInside];
+    UIBarButtonItem *rightButton = [[UIBarButtonItem alloc]initWithCustomView:btWeibo];
+    [self.navigationItem setRightBarButtonItem:rightButton];
     
     [UIView setAnimationDelegate:self];
     [UIView commitAnimations];
@@ -287,7 +298,7 @@
 {
 //    UIButton *bt = sender;
     NSInteger num = [textField.text integerValue];
-    if (num<1 || num > [label4.text integerValue]) {
+    if (num<1 || num > [stock integerValue]) {
         UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"数量不可为0或大于库存"
                                                        message:nil
                                                       delegate:nil
@@ -313,15 +324,16 @@
 
 - (void)weibo:(id)sender
 {
-    UIImage *img = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:[dicProductDetail objectForKey:@"bpic"]]]];
+//    UIImage *img = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:[dicProductDetail objectForKey:@"bpic"]]]];
     SinaWeibo *sinaweibo = [self sinaweibo];
     if ([sinaweibo isAuthValid]) {
         
         [sinaweibo requestWithURL:@"statuses/upload.json"
                            params:[NSMutableDictionary dictionaryWithObjectsAndKeys:
-                                    img,@"pic",[dicProductDetail objectForKey:@"pname"], @"status",nil]
+                                   imageProduct.image,@"pic",[dicProductDetail objectForKey:@"pname"], @"status",nil]
                        httpMethod:@"POST"
                          delegate:self];
+
     }else{
         [sinaweibo logIn];
     }
@@ -330,12 +342,15 @@
 
 - (void)buy
 {
-    UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"目前版本还无法购买"
-                                                   message:@"请等待下一版本发布"
-                                                  delegate:nil
-                                         cancelButtonTitle:@"确认"
-                                         otherButtonTitles:nil];
-    [alert show];
+    PayView *payView = [[PayView alloc]initWithFrame:CGRectMake(1024/2-470/2, 768/2-610/2, 470, 520)];
+    [self.view addSubview:payView];
+    
+//    UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"目前版本还无法购买"
+//                                                   message:@"请等待下一版本发布"
+//                                                  delegate:nil
+//                                         cancelButtonTitle:@"确认"
+//                                         otherButtonTitles:nil];
+//    [alert show];
 }
 
 - (void)subtraction
@@ -359,7 +374,7 @@
     isShareView = YES;
     [detailView addSubview:shareView];
     [detailView addSubview:btShopping];
-    [detailView addSubview:btWeibo];
+//    [detailView addSubview:btWeibo];
 
 
 }
@@ -399,7 +414,7 @@
         [activit1 startAnimating];
         textField.text = @"0";
         btShopping.tag = i;
-        btWeibo.tag = i;
+//        btWeibo.tag = i;
         isDetail = YES;
 //        label1.text = @"";
         label3.text = @"";
@@ -415,7 +430,7 @@
         [activit1 startAnimating];
         textField.text = @"0";
         btShopping.tag = i;
-        btWeibo.tag = i;
+//        btWeibo.tag = i;
         tagi = i;
         CGContextRef context = UIGraphicsGetCurrentContext();
         [UIView beginAnimations:nil context:context];
@@ -484,12 +499,12 @@
     //    [super.navigationController setNavigationBarHidden:isflage animated:TRUE];
     //    self.navigationController.navigationBar.hidden = isflage;
    
-    if (isShareView) {
-        [shareView removeFromSuperview];
-        [btShopping removeFromSuperview];
-        [btWeibo removeFromSuperview];
-        isShareView = NO;
-    }else{
+//    if (isShareView) {
+//        [shareView removeFromSuperview];
+//        [btShopping removeFromSuperview];
+//        [btWeibo removeFromSuperview];
+//        isShareView = NO;
+//    }else{
         CGContextRef context = UIGraphicsGetCurrentContext();
         [UIView beginAnimations:nil context:context];
         [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
@@ -505,7 +520,7 @@
         [UIView setAnimationDelegate:self];
         [UIView commitAnimations];
         isHide=!isHide;
-    }
+//    }
     //    [super.navigationController setToolbarHidden:isflage animated:TRUE];
 }
 
@@ -515,14 +530,24 @@
 - (void)sinaweiboDidLogIn:(SinaWeibo *)sinaweibo
 {
 
-    UIImage *img = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:[dicProductDetail objectForKey:@"bpic"]]]];
+//    UIImage *img = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:[dicProductDetail objectForKey:@"bpic"]]]];
     if ([sinaweibo isAuthValid]) {
         
         [sinaweibo requestWithURL:@"statuses/upload.json"
                            params:[NSMutableDictionary dictionaryWithObjectsAndKeys:
-                                   img,@"pic",[dicProductDetail objectForKey:@"pname"], @"status",nil]
+                                   imageProduct.image,@"pic",[dicProductDetail objectForKey:@"pname"], @"status",nil]
                        httpMethod:@"POST"
                          delegate:self];
+//        UIImageView *imageView = [[UIImageView alloc]initWithImage:[UIImage im]]
+//        UIImage *image = [UIImage imageWithData:<#(NSData *)#>:path];
+        
+//        [sinaweibo requestWithURL:@"statuses/upload.json"
+//                           params:[NSMutableDictionary dictionaryWithObjectsAndKeys:
+//                                   textView.text, @"status",
+//                                   image, @"pic", nil]
+//                       httpMethod:@"POST"
+//                         delegate:self];
+
     }
 }
 
@@ -616,8 +641,12 @@
         [activit1 removeFromSuperview];
 //        label1.text = [dicProductDetail objectForKey:@"pname"];
 //        label2.text = [dicProductDetail objectForKey:@""];
-        label3.text = [dicProductDetail objectForKey:@"price"];
-        label4.text = [dicProductDetail objectForKey:@"stock"];
+
+        [label3 setText:[NSString stringWithFormat:@"%@元",[dicProductDetail objectForKey:@"price"]]];
+        stock = [dicProductDetail objectForKey:@"stock"];
+        NSLog(@"%@",[dicProductDetail objectForKey:@"stock"]);
+        label4.text = [NSString stringWithFormat:@"库存:   %@",stock];
+        NSLog(@"%@",label4.text);
         NSString *html = [arrCallBack objectAtIndex:1];
 //        NSURL *baseURL = [NSURL URLWithString:[NSString stringWithContentsOfURL:<#(NSURL *)#> encoding:<#(NSStringEncoding)#> error:<#(NSError *__autoreleasing *)#>]]
         NSURL *baseURL = [NSURL URLWithString:@"http://www.nongfafd.com/Public/detail.css"];

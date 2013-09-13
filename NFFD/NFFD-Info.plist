@@ -71,6 +71,7 @@
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>sinaweibosso.1466866354</string>
+				<string>NFFD</string>
 			</array>
 		</dict>
 	</array>
@@ -78,6 +79,14 @@
 	<string>1.0</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>Partner</key>
+	<string>2088011711861974</string>
+	<key>RSA private key</key>
+	<string>MIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBAM0nmSfOlehqvTeqeMBSFocjaTBPvoT1MSXjSYhWbjNCe8vG/IA/pbQ0wl59ks7zlLHNyLNziyqarP2IRuZdks3HBAI1kwT7TIf1RyRA6pSRYYcKGAUED4pL2/f9VNykFsQmNA+UWqMBLsvKxAXQN54cNAiwHNJjNFHtyJ6Sa9eZAgMBAAECgYEAt78Bs9+Z8KK5esQahtZ/CuaybezejSM2s+KQl6Yh6ZNgYbGFsjBPb8nZVNxPwz/zLBVN7zxLpwsGacXHCslAk6W8jRkKUL3JaIeB5EOLRk63duGFXGPxP2jUfVARWvUWJHZiNujuKF7qH+2bc3WYFOfkvetZIMvAmOZBx0FBGmkCQQD61NYVdwyu//UGHRoRtAO75wuRaB8PNMU3d8d0uzUgviYJscMDvB92J0eve2nAxw+SLGaw+8SckZ0Aq5d0QARLAkEA0WHP7d6bdnskgrtH8WgenH6eW4s2GlZUGGU+kNuMmhTK5BaRtD8VMEktG7+mtMCuOEY35y5UOYGeeHIKYCf9KwJAV1++d1mx/F/CzW9jvljzmAfCmtMnRpe+PzUlMH9p4U77VxMp+GoWl4TVTsZxrypoPSXkW7BH67Y5d5tONbt7AwJAZ5PfbGiGt2HLefBzcnRzUC9C3z5KkVTLXRYYkUhKkZ5fj92qTmQ2cyB/9A4mxZvbk3MJDI/akmgQoLypbU/a6QJALAu/1SNg8Yvswhql9LCaACNadbyuyxfsvlY2hbgFjR8/Z8WrguzfU2muTcRsryflw0FOJ/DFYWuJOe6oY9jp9w==</string>
+	<key>RSA public key</key>
+	<string>MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCAerXhCK5BvxHBstcCDxnSKIrssn2ppt7ArPoj otF4XVraTxst6tzhpMGacoY1WF6jzvcQ4cWsaIesp4COGJBnsZ26Q8IwhFxwLVylKSCuCVUelrog 14EXRdxZ3GGjqhkIuLhRoGU4nim4iF44qyD60TupQLCbqesun+2mO3bcJQIDAQAB</string>
+	<key>Seller</key>
+	<string>2088011711861974</string>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
 		<string>armv7</string>

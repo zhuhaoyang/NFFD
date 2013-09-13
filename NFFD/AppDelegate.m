@@ -11,7 +11,32 @@
 #import "ViewController.h"
 #import "SinaWeibo.h"
 
+
+#import "AlixPay.h"
+#import "AlixPayResult.h"
+#import "DataVerifier.h"
+#import <sys/utsname.h>
+
+@interface AppDelegate ()
+
+- (BOOL)isSingleTask;
+- (void)parseURL:(NSURL *)url application:(UIApplication *)application;
+
+@end
+
 @implementation AppDelegate
+
+- (BOOL)isSingleTask{
+	struct utsname name;
+	uname(&name);
+	float version = [[UIDevice currentDevice].systemVersion floatValue];//判定系统版本。
+	if (version < 4.0 || strstr(name.machine, "iPod1,1") != 0 || strstr(name.machine, "iPod2,1") != 0) {
+		return YES;
+	}
+	else {
+		return NO;
+	}
+}
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -25,6 +50,25 @@
     
 //    [self.window addSubview:startLoge];
 
+    
+    
+    
+    /*
+	 *单任务handleURL处理
+	 */
+	if ([self isSingleTask]) {
+		NSURL *url = [launchOptions objectForKey:@"UIApplicationLaunchOptionsURLKey"];
+		
+		if (nil != url) {
+			[self parseURL:url application:application];
+		}
+	}
+
+
+    
+    
+
+    
     self.sinaweibo = [[SinaWeibo alloc] initWithAppKey:kAppKey appSecret:kAppSecret appRedirectURI:kAppRedirectURI andDelegate:self.viewController];
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSDictionary *sinaweiboInfo = [defaults objectForKey:@"SinaWeiboAuthData"];
@@ -34,7 +78,6 @@
         self.sinaweibo.expirationDate = [sinaweiboInfo objectForKey:@"ExpirationDateKey"];
         self.sinaweibo.userID = [sinaweiboInfo objectForKey:@"UserIDKey"];
     }
-  
 
     return YES;
 }
@@ -43,12 +86,13 @@
 {
 //    if ([url.scheme isEqualToString:Key_weiXinAppID]) {
 //        return [WXApi handleOpenURL:url delegate:self];
+    [self parseURL:url application:application];
     return [self.sinaweibo handleOpenURL:url];
 }
 
 - (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url
 {
-    
+    [self parseURL:url application:application];
     return [self.sinaweibo handleOpenURL:url];
 }
 
@@ -81,6 +125,104 @@
 - (void)applicationWillTerminate:(UIApplication *)application
 {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+}
+
+
+- (void)parseURL:(NSURL *)url application:(UIApplication *)application {
+	AlixPay *alixpay = [AlixPay shared];
+	AlixPayResult *result = [alixpay handleOpenURL:url];
+	if (result) {
+		//是否支付成功
+		if (9000 == result.statusCode) {
+			/*
+			 *用公钥验证签名
+			 */
+			id<DataVerifier> verifier = CreateRSADataVerifier([[NSBundle mainBundle] objectForInfoDictionaryKey:@"RSA public key"]);
+			if ([verifier verifyString:result.resultString withSign:result.signString]) {
+                NSString *strMessage;
+                if ([result.statusMessage length] == 0) {
+                    strMessage = @"支付成功";
+                }else{
+                    strMessage = result.statusMessage;
+                }
+				UIAlertView * alertView = [[UIAlertView alloc] initWithTitle:@"提示"
+																	 message:strMessage
+																	delegate:nil
+														   cancelButtonTitle:@"确定"
+														   otherButtonTitles:nil];
+				[alertView show];
+                m_serviceConfirmpay = [[serviceConfirmpay alloc]initWithDelegate:self requestMode:TRequestMode_Synchronous];
+                NSString *oid = [[NSUserDefaults standardUserDefaults]objectForKey:@"oid"];
+                [m_serviceConfirmpay sendRequestWithData:[NSString stringWithFormat:@"oid=%@",oid] addr:@"confirmpay?"];
+//				[alertView release];
+			}//验签错误
+			else {
+				UIAlertView * alertView = [[UIAlertView alloc] initWithTitle:@"提示"
+																	 message:@"签名错误"
+																	delegate:nil
+														   cancelButtonTitle:@"确定"
+														   otherButtonTitles:nil];
+				[alertView show];
+//				[alertView release];
+			}
+		}
+		//如果支付失败,可以通过result.statusCode查询错误码
+		else {
+			UIAlertView * alertView = [[UIAlertView alloc] initWithTitle:@"提示"
+																 message:result.statusMessage
+																delegate:nil
+													   cancelButtonTitle:@"确定"
+													   otherButtonTitles:nil];
+			[alertView show];
+//			[alertView release];
+		}
+		
+	}
+}
+
+#pragma mark -
+#pragma mark serviceCallBack
+- (void)serviceConfirmpayCallBack:(NSArray *)arrCallBack withErrorMessage:(Error *)error;
+{
+    
+    if (arrCallBack == nil || [arrCallBack count] == 0) {
+        NSLog(@"Confirmpay nil");
+    }else{
+        if ([[arrCallBack objectAtIndex:0]isEqualToString:@"1"]) {
+                        
+            
+//            if (![[NSFileManager defaultManager] fileExistsAtPath:[[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0]stringByAppendingPathComponent:@"OrderedOid.plist"]]) {
+//                NSLog(@"不存在");
+//            }else{
+//                NSLog(@"存在");
+//            }
+            NSURL *documentsDictoryURL = [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
+            NSURL *storeURL = [documentsDictoryURL URLByAppendingPathComponent:@"OrderedOid.plist"];
+            
+            NSMutableDictionary *dic = [[NSMutableDictionary alloc] initWithContentsOfURL:storeURL];
+            if (dic == nil) {
+                dic = [[NSMutableDictionary alloc]initWithCapacity:0];
+            }
+            NSLog(@"old dic =%@",dic);
+            NSMutableArray *arr = [[NSMutableArray alloc]initWithArray:[dic objectForKey:@"oid"]];
+            if (arr == nil) {
+                arr = [[NSMutableArray alloc]initWithCapacity:0];
+            }
+            NSString *newOid = [[NSUserDefaults standardUserDefaults] objectForKey:@"oid"];
+            
+            [arr insertObject:newOid atIndex:0];
+            [dic setObject:arr forKey:@"oid"];
+            NSLog(@"now dic = %@",dic);
+            BOOL isWrote = [dic writeToURL:storeURL atomically:YES];
+            NSLog(@"is wrote = %d",isWrote);
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            NSMutableDictionary *newDic = [[NSMutableDictionary alloc]initWithContentsOfURL:storeURL];
+            NSLog(@"newDic = %@",newDic);
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            [[NSNotificationCenter defaultCenter]postNotificationName:@"paySucceed" object:nil];
+            [[NSUserDefaults standardUserDefaults]removeObjectForKey:@"oid"];
+        }
+    }
 }
 
 @end

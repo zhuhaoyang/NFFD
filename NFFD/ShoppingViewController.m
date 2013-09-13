@@ -20,6 +20,10 @@
     if (self) {
         // Custom initialization
 //        self.view.frame = CGRectMake(0, -768, 1024, 768-20);
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(paySucceed) name:@"paySucceed" object:nil];
+        m_serviceAddproduct = [[serviceAddproduct alloc]initWithDelegate:self requestMode:TRequestMode_Synchronous];
+        m_serviceDelproduct = [[serviceDelproduct alloc]initWithDelegate:self requestMode:TRequestMode_Synchronous];
+
         UILabel *title = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 200, 44)];
         title.text = @"购物车";
         title.textAlignment = NSTextAlignmentCenter;
@@ -44,6 +48,13 @@
     return self;
 }
 
+- (void)paySucceed
+{
+    arrOrderdetail = nil;
+    [payView removeFromSuperview];
+    payView = nil;
+    [m_tableView reloadData];
+}
 
 - (void)viewDidAppear:(BOOL)animated
 {
@@ -81,7 +92,7 @@
     [dic setValue:num forKey:@"num"];
     [arrOrderdetail replaceObjectAtIndex:row withObject:dic];
     NSUInteger totalNum = 0;
-    float totalPrice = 0;
+    totalPrice = 0;
     for (NSDictionary *obj in arrOrderdetail) {
         NSUInteger n = [[obj objectForKey:@"num"] integerValue];
         totalNum = totalNum + n;
@@ -95,12 +106,51 @@
 
 - (void)buy
 {
-    UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"目前版本还无法购买"
-                                                   message:@"请等待下一版本发布"
-                                                  delegate:nil
-                                         cancelButtonTitle:@"确认"
-                                         otherButtonTitles:nil];
-    [alert show];
+    if (arrOrderdetail == nil || [arrOrderdetail count] == 0) {
+        UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"您的购物车是空的"
+                                                       message:nil
+                                                      delegate:nil
+                                             cancelButtonTitle:@"确认"
+                                             otherButtonTitles:nil];
+        [alert show];
+    }else{
+        
+//        if (isOver) {
+        orderName = [[NSMutableString alloc]initWithCapacity:0];
+        for (NSDictionary *dic in arrOrderdetail) {
+            NSUInteger length = [orderName length];
+            if (length > 0) {
+                [orderName insertString:@"  "atIndex:length];
+            }
+            NSString *str = [NSString stringWithFormat:@"%@*%@",[dic objectForKey:@"pname"],[dic objectForKey:@"num"]];
+            [orderName insertString:str atIndex:length];
+        }
+        
+        NSString *oid = [[NSUserDefaults standardUserDefaults] objectForKey:@"oid"];
+        NSString *cost = [NSString stringWithFormat:@"%.2f",totalPrice];
+        payView = [[PayView alloc]initWithFrame:CGRectMake(1024/2-470/2, 768/2-610/2-50, 470, 570) oid:oid cost:cost orderName:orderName];
+        [self.view addSubview:payView];
+            
+//        }
+
+        
+        
+        
+           
+    }
+    
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == 0) {
+        editNum= alertView.tag;
+        NSString *oid = [[NSUserDefaults standardUserDefaults] objectForKey:@"oid"];
+        NSString *pid = [[arrOrderdetail objectAtIndex:editNum] objectForKey:@"pid"];
+        NSString *str = [NSString stringWithFormat:@"oid=%@&pid=%@",oid,pid];
+        [m_serviceDelproduct sendRequestWithData:str addr:@"delproduct?"];
+       
+    }
 }
 
 - (void)subtraction:(id)sender
@@ -109,12 +159,34 @@
     UITableViewCell *cell = [m_tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:bt.tag inSection:0]];
     UITextField *textField = (UITextField *)[cell viewWithTag:100+bt.tag];
     NSInteger num = [textField.text integerValue] - 1;
-    if (num < 0) {
-        num = 0;
-    }
-    textField.text = [NSString stringWithFormat:@"%i", num];
-    [self reCompute:textField.text row:bt.tag];
+    if (num < 1) {
+        UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"是否删除该商品?"
+                                                       message:nil
+                                                      delegate:self
+                                             cancelButtonTitle:nil
+                                             otherButtonTitles:@"确认",@"取消", nil];
+        alert.tag = bt.tag;
+        [alert show];
+    }else{
+        NSString *oid = [[NSUserDefaults standardUserDefaults] objectForKey:@"oid"];
 
+        NSDictionary *dic = [arrOrderdetail objectAtIndex:bt.tag];
+        NSString *pid = [dic objectForKey:@"pid"];
+        NSString *price = [dic objectForKey:@"price"];
+        NSString *str;
+        
+        
+        if (oid == nil) {
+            str = [NSString stringWithFormat:@"pid=%@&num=%d￼￼&price=%@",pid,num,price];
+        }else{
+            str = [NSString stringWithFormat:@"pid=%@&num=%d￼￼&price=%@&oid=%@",pid,num,price,oid];
+        }
+    
+        [m_serviceAddproduct sendRequestWithData:str addr:@"addproduct?"];
+    }
+
+//        textField.text = [NSString stringWithFormat:@"%i", num];
+//        [self reCompute:textField.text row:bt.tag];
 }
 
 - (void)plus:(id)sender
@@ -123,8 +195,24 @@
     UITableViewCell *cell = [m_tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:bt.tag inSection:0]];
     UITextField *textField = (UITextField *)[cell viewWithTag:100+bt.tag];
     NSInteger num = [textField.text integerValue] + 1;
-    textField.text = [NSString stringWithFormat:@"%i", num];
-    [self reCompute:textField.text row:bt.tag];
+    NSString *oid = [[NSUserDefaults standardUserDefaults] objectForKey:@"oid"];
+    
+    NSDictionary *dic = [arrOrderdetail objectAtIndex:bt.tag];
+    NSString *pid = [dic objectForKey:@"pid"];
+    NSString *price = [dic objectForKey:@"price"];
+    NSString *str;
+    
+    
+    if (oid == nil) {
+        str = [NSString stringWithFormat:@"pid=%@&num=%d￼￼&price=%@",pid,num,price];
+    }else{
+        str = [NSString stringWithFormat:@"pid=%@&num=%d￼￼&price=%@&oid=%@",pid,num,price,oid];
+    }
+    
+    [m_serviceAddproduct sendRequestWithData:str addr:@"addproduct?"];
+//    textField.text = [NSString stringWithFormat:@"%i", num];
+//    [[arrOrderdetail objectAtIndex:bt.tag] setObject:textField.text forKey:@"num"];
+//    [self reCompute:textField.text row:bt.tag];
 }
 
 #pragma mark -
@@ -198,7 +286,7 @@
     [bt addTarget:self action:@selector(buy) forControlEvents:UIControlEventTouchUpInside];
     [footerView addSubview:bt];
     NSUInteger totalNum = 0;
-    float totalPrice = 0;
+    totalPrice = 0;
     for (NSDictionary *obj in arrOrderdetail) {
         NSUInteger n = [[obj objectForKey:@"num"] integerValue];
         totalNum = totalNum + n;
@@ -238,18 +326,13 @@
 {
     
     
-    NSUInteger row = [indexPath row];
+    editNum = [indexPath row];
     NSString *oid = [[NSUserDefaults standardUserDefaults]objectForKey:@"oid"];
-    NSString *pid = [[arrOrderdetail objectAtIndex:row] objectForKey:@"pid"];
+    NSString *pid = [[arrOrderdetail objectAtIndex:editNum] objectForKey:@"pid"];
     if (oid != nil) {
         NSString *str = [NSString stringWithFormat:@"oid=%@&pid=%@",oid,pid];
-        m_serviceDelproduct = [[serviceDelproduct alloc]initWithDelegate:self requestMode:TRequestMode_Synchronous];
         [m_serviceDelproduct sendRequestWithData:str addr:@"delproduct?"];
     }
-//    [arrOrderdetail removeObjectAtIndex:row];
-
-//    [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath]withRowAnimation:UITableViewRowAnimationLeft];
-    
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -337,7 +420,7 @@
     if (arrCallBack == nil || [arrCallBack count] == 0) {
         NSLog(@"GetOrderdetail nil");
     }else{
-        
+        arrOrderdetail = nil;
         arrOrderdetail = [[NSMutableArray alloc]initWithArray:arrCallBack];
         
         [m_tableView reloadData];   
@@ -347,16 +430,29 @@
 - (void)serviceDelproductCallBack:(NSArray *)arrCallBack withErrorMessage:(Error *)error;
 {
     
-    if (arrCallBack == nil || [arrCallBack count] == 0) {
+    if (arrCallBack == nil) {
         NSLog(@"Delproduct nil");
     }else{
         
-        arrOrderdetail = [[NSMutableArray alloc]initWithArray:arrCallBack];
+        [arrOrderdetail removeObjectAtIndex:editNum];
+//        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:editNum inSection:0];
         
+//        [m_tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath]withRowAnimation:UITableViewRowAnimationLeft];
         [m_tableView reloadData];
+//        arrOrderdetail = nil;
     }
 }
 
+- (void)serviceAddproductCallBack:(NSArray *)arrCallBack withErrorMessage:(Error *)error;
+{
+    
+    if (arrCallBack == nil || [arrCallBack count] == 0) {
+        NSLog(@"Addproduct nil");
+    }else{
+        arrOrderdetail = [[NSMutableArray alloc]initWithArray:arrCallBack];
+        [m_tableView reloadData];
+    }
+}
 
 
 @end

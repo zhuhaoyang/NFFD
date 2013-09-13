@@ -25,6 +25,12 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showToolbar) name:@"showToolbar" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fadeScreen) name:@"fadeScreen" object:nil];
 
+    
+    
+    
+   
+    
+    
     if (1) {
 //        [[UIApplication sharedApplication]setStatusBarHidden:YES withAnimation:UIStatusBarAnimationNone];
         startLoge = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"loading"]];
@@ -76,7 +82,12 @@
 //    [self.toolbar setBackgroundImage:[UIImage imageNamed:@"toolbar"] forToolbarPosition:UIToolbarPositionAny barMetrics:UIBarMetricsLandscapePhone];
 //    [self.toolbar setTintColor:[UIColor colorWithRed:0.612 green:0.573 blue:0.490 alpha:1]];
     [self.toolbar setBackgroundImage:[UIImage imageNamed:@"toolbar"] forToolbarPosition:UIToolbarPositionAny barMetrics:UIBarMetricsDefault];
-//    UIBarButtonItem *bt1 = [[UIBarButtonItem alloc]initWithTitle:@"我的最爱" style:UIBarButtonItemStylePlain target:self action:@selector(clickBt1)];
+    UIButton *btPayedorder = [UIButton buttonWithType:UIButtonTypeCustom];
+    btPayedorder.frame = CGRectMake(1024-50, (49-27)/2, 27, 27);
+    [btPayedorder setImage:[UIImage imageNamed:@"btPayedorder"] forState:UIControlStateNormal];
+    [btPayedorder addTarget:self action:@selector(showPayedorder:) forControlEvents:UIControlEventTouchUpInside];
+    [self.toolbar addSubview:btPayedorder];
+    
     UIButton *bt2 = [UIButton buttonWithType:UIButtonTypeCustom];
     [bt2 setImage:[UIImage imageNamed:@"tab1"] forState:UIControlStateNormal];
     bt2.frame = CGRectMake(153, 0, 123, 49);
@@ -123,6 +134,9 @@
     [self.view addSubview:self.nav1.view];
     [self.view addSubview:self.toolbar];
 //    [m_EveryMomentViewController load];
+    
+    m_PayedorderViewController = [[PayedorderViewController alloc]initWithNibName:@"PayedorderViewController" bundle:nil];
+
     }
 
 //- (void)shopping
@@ -132,6 +146,27 @@
 //
 //   
 //}
+
+
+
+- (void)showPayedorder:(id)sender
+{
+
+    
+    
+    m_PayedorderViewController.view.frame = CGRectMake(1024, 0, 1024, 768);
+    [self.view addSubview:m_PayedorderViewController.view];
+    
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    [UIView beginAnimations:nil context:context];
+    [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
+    [UIView setAnimationDuration:0.3];
+    m_PayedorderViewController.view.frame = CGRectMake(0, 0, 1024, 768);
+    [UIView setAnimationDidStopSelector: @selector(remove)];
+    [UIView setAnimationDelegate:self];
+    [UIView commitAnimations];
+
+}
 
 - (void)clickBt1
 {

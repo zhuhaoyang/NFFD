@@ -10,15 +10,22 @@
 #import "serviceGetorderdetail.h"
 #import "EGOImageView.h"
 #import "serviceDelproduct.h"
-
+#import "serviceAddproduct.h"
+#import "PayView.h"
 @interface ShoppingViewController : UIViewController
-<UITableViewDataSource,UITableViewDelegate>{
+<UITableViewDataSource,UITableViewDelegate,UIAlertViewDelegate>{
     UITableView *m_tableView;
     serviceGetorderdetail *m_serviceGetorderdetail;
     NSMutableArray *arrOrderdetail;
     serviceDelproduct *m_serviceDelproduct;
+    serviceAddproduct *m_serviceAddproduct;
     UILabel *labTotalNum;
     UILabel *labTotalPrice;
+    float totalPrice;
+    NSMutableString *orderName;
+    PayView *payView;
+    BOOL isOver;
+    NSUInteger editNum;
 }
 
 - (void)reCompute:(NSString *)num row:(NSUInteger)row;

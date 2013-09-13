@@ -15,7 +15,7 @@
 #import "serviceGetProductdetail.h"
 #import "EGOImageView.h"
 #import "serviceAddproduct.h"
-
+#import "PayView.h"
 @interface CommodityViewController : UIViewController<SinaWeiboDelegate,SinaWeiboRequestDelegate
 ,UIScrollViewDelegate>{
     BOOL isHide;
@@ -28,15 +28,19 @@
     UILabel *label1;
 //    UILabel *label2;
     UILabel *label3;
+//    NSString *price;
+    
     UILabel *label4;
+    NSString *stock;
     UILabel *label5;
+    
     UITextField *textField;
     UIButton *btBuy;
     
     UIImageView *shareView;
     UIButton *btShare;
     UIButton *btShopping;
-    UIButton *btWeibo;
+//    UIButton *btWeibo;
     
     BOOL isShareView;
     NSDictionary *dicTypeData;

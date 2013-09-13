@@ -52,6 +52,7 @@ typedef enum  requestMode
 //-(id)initWithDelegate:(id<serviceCallBackDelegate>)aDelegate
 //		  requestMode:(TRequestMode)mode;
 -(void)sendRequestWithData:(NSString *)str addr:(NSString *)addr;
+-(void)sendRequestForPOSTWithData:(NSDictionary*)dic addr:(NSString *)addr;
 //- (NSString *)encodeToPercentEscapeString: (NSString *) input;
 //- (NSString *)decodeFromPercentEscapeString: (NSString *) input;
 - (void)clearDelegates;

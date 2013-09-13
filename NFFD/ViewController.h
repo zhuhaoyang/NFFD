@@ -10,6 +10,7 @@
 #import "EveryMomentViewController.h"
 #import "LifeViewController.h"
 #import "OrientationNavigationController.h"
+#import "PayedorderViewController.h"
 //#import "ShoppingViewController.h"
 //#import "OrientationTabBarController.h"
 @interface ViewController : UIViewController<UITabBarControllerDelegate>
@@ -20,6 +21,7 @@
     LifeViewController *m_LifeViewController;
     OrientationNavigationController *nav1;
     OrientationNavigationController *nav2;
+    PayedorderViewController *m_PayedorderViewController;
 //    ShoppingViewController *m_ShoppingViewController;
 //    OrientationTabBarController *tabBarController;
     UIToolbar *toolbar;
