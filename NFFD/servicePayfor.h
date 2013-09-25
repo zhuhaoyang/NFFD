@@ -14,7 +14,7 @@
 }
 
 - (id)initWithDelegate:(id)aDelegate requestMode:(TRequestMode)mode;
--(void)sendRequestWithData:(NSDictionary*)dic addr:(NSString *)addr;
+//- (void)sendRequestWithData:(NSDictionary*)dic addr:(NSString *)addr;
 @end
 @protocol servicePayforCallBackDelegate<NSObject>;
 

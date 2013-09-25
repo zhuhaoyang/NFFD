@@ -19,6 +19,11 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
+        if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"iOS7"] boolValue]) {
+            self.edgesForExtendedLayout = UIRectEdgeNone;
+            self.automaticallyAdjustsScrollViewInsets = NO;
+            self.extendedLayoutIncludesOpaqueBars = NO;
+        }
         m_aid = [NSString stringWithString:aid];
         UILabel *m_title = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 200, 44)];
         m_title.text = title;

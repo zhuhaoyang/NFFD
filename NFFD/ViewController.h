@@ -29,10 +29,10 @@
     UIImageView *triangle;
     UIButton *btShopping;
 }
-@property(nonatomic,retain)OrientationNavigationController *nav1;
-@property(nonatomic,retain)OrientationNavigationController *nav2;
-@property(nonatomic,retain)LifeViewController *m_LifeViewController;
-@property(nonatomic,retain)UIToolbar *toolbar;
+@property(nonatomic,strong)OrientationNavigationController *nav1;
+@property(nonatomic,strong)OrientationNavigationController *nav2;
+@property(nonatomic,strong)LifeViewController *m_LifeViewController;
+@property(nonatomic,strong)UIToolbar *toolbar;
 //@property(nonatomic) NSInteger selectedTab;
 - (void)setMyLayout;
 - (void)fadeScreen;

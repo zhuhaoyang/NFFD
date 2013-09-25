@@ -13,7 +13,10 @@
 @end
 
 @implementation ViewController
-
+@synthesize nav1 = _nav1;
+@synthesize nav2 = _nav2;
+@synthesize m_LifeViewController = _m_LifeViewController;
+@synthesize toolbar = _toolbar;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -76,8 +79,12 @@
 - (void)showMain
 {
 //    [[UIApplication sharedApplication]setStatusBarHidden:NO withAnimation:UIStatusBarAnimationNone];
+    
+//    self.extendedLayoutIncludesOpaqueBars = YES;
+//    self.edgesForExtendedLayout = UIRectEdgeNone;
     selectedTab = 1;
-    self.toolbar = [[UIToolbar alloc]initWithFrame:CGRectMake(0, 768-20-49, 1024, 49)];
+    NSLog(@"%f",self.view.frame.size.height);
+    self.toolbar = [[UIToolbar alloc]initWithFrame:CGRectMake(0, self.view.frame.size.width-49, 1024, 49)];
 //    NSLog(@"%@",self.toolbar);
 //    [self.toolbar setBackgroundImage:[UIImage imageNamed:@"toolbar"] forToolbarPosition:UIToolbarPositionAny barMetrics:UIBarMetricsLandscapePhone];
 //    [self.toolbar setTintColor:[UIColor colorWithRed:0.612 green:0.573 blue:0.490 alpha:1]];
@@ -118,17 +125,27 @@
     
     m_LifeViewController = [[LifeViewController alloc]initWithNibName:@"LifeViewController" bundle:nil];
     self.nav1 = [[OrientationNavigationController alloc]initWithRootViewController:m_LifeViewController];
-    self.nav1.view.frame = CGRectMake(0, 0, 1024, 768-49-20);
+//    self.nav1.edgesForExtendedLayout = UIRectEdgeNone;
     //    [self.nav.navigationBar setTintColor:[UIColor colorWithRed:0.612 green:0.573 blue:0.490 alpha:1]];
-    [self.nav1.navigationBar setBackgroundImage:[UIImage imageNamed:@"nav"] forBarMetrics:UIBarMetricsDefault];
-    
+
     m_EveryMomentViewController = [[EveryMomentViewController alloc]initWithNibName:@"EveryMomentViewController" bundle:nil];
-    self.nav2 = [[OrientationNavigationController alloc]initWithRootViewController:m_EveryMomentViewController];
-    self.nav2.view.frame = CGRectMake(0, 0, 1024, 768-49-20);
 //    [self.nav.navigationBar setTintColor:[UIColor colorWithRed:0.612 green:0.573 blue:0.490 alpha:1]];
-    [self.nav2.navigationBar setBackgroundImage:[UIImage imageNamed:@"nav"] forBarMetrics:UIBarMetricsDefault];
+
 //    self.nav.view.frame = [[UIScreen mainScreen] bounds];
+    self.nav2 = [[OrientationNavigationController alloc]initWithRootViewController:m_EveryMomentViewController];
     
+    if ([[[NSUserDefaults standardUserDefaults]objectForKey:@"iOS7"] boolValue]) {
+        [self.nav1.navigationBar setBackgroundImage:[UIImage imageNamed:@"nav"] forBarPosition:UIBarPositionTop barMetrics:UIBarMetricsDefault];
+        [self.nav2.navigationBar setBackgroundImage:[UIImage imageNamed:@"nav"] forBarPosition:UIBarPositionTopAttached barMetrics:UIBarMetricsDefault];
+
+    }else{
+        [self.nav1.navigationBar setBackgroundImage:[UIImage imageNamed:@"nav1"] forBarMetrics:UIBarMetricsDefault];
+        [self.nav2.navigationBar setBackgroundImage:[UIImage imageNamed:@"nav1"] forBarMetrics:UIBarMetricsDefault];
+    }
+    self.nav1.view.frame = CGRectMake(0, 0, 1024, 768-49);
+    self.nav2.view.frame = CGRectMake(0, 0, 1024, 768-49);
+
+//    self.nav2.view.backgroundColor = [UIColor redColor];
     self.nav1.view.alpha = 0;
     self.toolbar.alpha = 0;
     [self.view addSubview:self.nav1.view];
@@ -258,15 +275,17 @@
     [UIView beginAnimations:nil context:context];
     [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
     [UIView setAnimationDuration:0.3];
-    self.toolbar.frame = CGRectMake(0, 768, 1024, 49);
+    self.toolbar.frame = CGRectMake(0, self.view.frame.size.width, 1024, 49);
+    self.nav2.view.frame = CGRectMake(0, 0, 1024, 768);
     [UIView setAnimationDelegate:self];
     [UIView commitAnimations];
+
 }
 
 - (void)showToolbar
 {
-    self.toolbar.frame = CGRectMake(0, 768-20-49, 1024, 49);
-    self.nav2.view.frame = CGRectMake(0, 0, 1024, 768-20-49);
+    self.toolbar.frame = CGRectMake(0, self.view.frame.size.width-49, 1024, 49);
+    self.nav2.view.frame = CGRectMake(0, 0, 1024, 768-49);
 
 }
 

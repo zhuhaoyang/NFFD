@@ -20,6 +20,14 @@
     if (self) {
         // Custom initialization
 //        [[UIApplication sharedApplication]setStatusBarHidden:YES withAnimation:UIStatusBarAnimationSlide];
+//        NSLog(@"%@",[[NSUserDefaults standardUserDefaults] objectForKey:@"iOS7"]);
+        if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"iOS7"] boolValue]) {
+            self.edgesForExtendedLayout = UIRectEdgeNone;
+            self.automaticallyAdjustsScrollViewInsets = NO;
+            self.extendedLayoutIncludesOpaqueBars = NO;
+//            barPosition
+        }
+        
         self.view.frame = CGRectMake(0, 0, 1024, 768-49-20);
         UILabel *title = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 200, 44)];
         title.text = @"每月鲜报";

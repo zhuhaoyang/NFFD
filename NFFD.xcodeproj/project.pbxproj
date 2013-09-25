@@ -26,6 +26,8 @@
 		C02DD21017CDD02A00805730 /* MagazineViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C02DD20E17CDD02900805730 /* MagazineViewController.m */; };
 		C02DD21117CDD02A00805730 /* MagazineViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C02DD20F17CDD02A00805730 /* MagazineViewController.xib */; };
 		C02DD21717CDD2AF00805730 /* serviceGetarticledetail.m in Sources */ = {isa = PBXBuildFile; fileRef = C02DD21617CDD2AF00805730 /* serviceGetarticledetail.m */; };
+		C060B4F517F17612006F835A /* nav1@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C060B4F317F17612006F835A /* nav1@2x.png */; };
+		C060B4F617F17612006F835A /* nav1.png in Resources */ = {isa = PBXBuildFile; fileRef = C060B4F417F17612006F835A /* nav1.png */; };
 		C085FA6617B1EF830066DDA6 /* test.css in Resources */ = {isa = PBXBuildFile; fileRef = C085FA6517B1EF830066DDA6 /* test.css */; };
 		C085FA6717B1EFB00066DDA6 /* test.css in Sources */ = {isa = PBXBuildFile; fileRef = C085FA6517B1EF830066DDA6 /* test.css */; };
 		C09489E6179FD4E90054F407 /* triangle.png in Resources */ = {isa = PBXBuildFile; fileRef = C09489E4179FD4E90054F407 /* triangle.png */; };
@@ -188,6 +190,8 @@
 		C02DD20F17CDD02A00805730 /* MagazineViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MagazineViewController.xib; sourceTree = "<group>"; };
 		C02DD21517CDD2AE00805730 /* serviceGetarticledetail.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = serviceGetarticledetail.h; sourceTree = "<group>"; };
 		C02DD21617CDD2AF00805730 /* serviceGetarticledetail.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = serviceGetarticledetail.m; sourceTree = "<group>"; };
+		C060B4F317F17612006F835A /* nav1@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "nav1@2x.png"; sourceTree = "<group>"; };
+		C060B4F417F17612006F835A /* nav1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = nav1.png; sourceTree = "<group>"; };
 		C085FA6517B1EF830066DDA6 /* test.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = test.css; sourceTree = "<group>"; };
 		C09489E4179FD4E90054F407 /* triangle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = triangle.png; sourceTree = "<group>"; };
 		C09489E5179FD4E90054F407 /* triangle@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "triangle@2x.png"; sourceTree = "<group>"; };
@@ -930,6 +934,8 @@
 				C09489E5179FD4E90054F407 /* triangle@2x.png */,
 				C0E9C842179F722000B32200 /* nav.png */,
 				C0E9C840179F720100B32200 /* nav@2x.png */,
+				C060B4F317F17612006F835A /* nav1@2x.png */,
+				C060B4F417F17612006F835A /* nav1.png */,
 				C0E9C838179E4B1A00B32200 /* loading@2x.png */,
 				C0E9C83A179E4B2100B32200 /* loading.png */,
 				C0E9C844179F72D700B32200 /* toolbar@2x.png */,
@@ -1030,6 +1036,7 @@
 				C0948A6C17A11BEB0054F407 /* shopping1.png in Resources */,
 				C0948A6D17A11BEB0054F407 /* shopping1@2x.png in Resources */,
 				C0948B3A17A249AD0054F407 /* tab1.png in Resources */,
+				C060B4F517F17612006F835A /* nav1@2x.png in Resources */,
 				C0948B3C17A24A0C0054F407 /* tab2.png in Resources */,
 				C0948B3F17A24AB80054F407 /* tab2@2x.png in Resources */,
 				C0948B4017A24AB80054F407 /* tab1@2x.png in Resources */,
@@ -1051,6 +1058,7 @@
 				C00E8A6A17A8E20600FBC5EC /* iTunesArtwork.png in Resources */,
 				C00E8A6B17A8E20600FBC5EC /* iTunesArtwork@2x.png in Resources */,
 				C085FA6617B1EF830066DDA6 /* test.css in Resources */,
+				C060B4F617F17612006F835A /* nav1.png in Resources */,
 				C02DD21117CDD02A00805730 /* MagazineViewController.xib in Resources */,
 				C0C2B3C217DD7DCE003EDFA9 /* btPay.png in Resources */,
 				C0C2B3C317DD7DCE003EDFA9 /* btPay@2x.png in Resources */,

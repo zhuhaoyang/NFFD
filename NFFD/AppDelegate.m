@@ -51,8 +51,13 @@
 //    [self.window addSubview:startLoge];
 
     
-    
-    
+    float device = [[[UIDevice currentDevice] systemVersion] floatValue];
+    NSLog(@"%f",device);
+    if (device >= 7) {
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"iOS7"];
+    }else{
+        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"iOS7"];
+    }
     /*
 	 *单任务handleURL处理
 	 */

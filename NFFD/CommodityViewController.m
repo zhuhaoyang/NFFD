@@ -19,7 +19,15 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
+        
+//        self.view.backgroundColor = [UIColor blackColor];
         // Custom initialization
+//        self.view.frame =  [[UIScreen mainScreen] bounds];
+        if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"iOS7"] boolValue]) {
+            self.edgesForExtendedLayout = UIRectEdgeNone;
+            self.automaticallyAdjustsScrollViewInsets = NO;
+            self.extendedLayoutIncludesOpaqueBars = NO;
+        }
         dicTypeData = [[NSDictionary alloc]initWithDictionary:dic];
         isHide = YES;
         isDetail = NO;
@@ -53,29 +61,29 @@
 //    [activity startAnimating];
 //    [self.view addSubview:activity];
 //    [self.view bringSubviewToFront:activity];
-    
-    EGOImageView *imgBpic = [[EGOImageView alloc]initWithFrame:CGRectMake(0, 0, 1024, 768)];
+    self.view.frame = CGRectMake(0, 0, 1024, 748);
+    EGOImageView *imgBpic = [[EGOImageView alloc]init];
     imgBpic.imageURL = [NSURL URLWithString:[dicTypeData objectForKey:@"bpic"]];
-    imgBpic.frame = CGRectMake(0, 0, 1024, 768);
+    imgBpic.frame = CGRectMake(0, 0, 1024, self.view.frame.size.height);
     //    imgBpic.backgroundColor = [UIColor blackColor];
     [self.view addSubview:imgBpic];
     [self.view sendSubviewToBack:imgBpic];
     
-    
+//    NSLog(@"%@",imgBpic);
     
     //    UIImageView *background = [[UIImageView alloc]init];//WithImage:[UIImage imageNamed:@""]];
     //    background.frame = CGRectMake(0, 0, 1024, 768-20-5.5);
     //    background.backgroundColor = [UIColor blackColor];
     //    [self.view addSubview:background];
     
-    detailView = [[UIView alloc]initWithFrame:CGRectMake(0, -583, 1024, 583)];
+    detailView = [[UIView alloc]initWithFrame:CGRectMake(0, -602, 1024, self.view.frame.size.height-166)];
     detailView.backgroundColor = [UIColor colorWithRed:0.925 green:0.929 blue:0.878 alpha:1];
 //        detailView.backgroundColor = [UIColor colorWithRed:0.984 green:0.984 blue:0.984 alpha:1];
     [self.view addSubview:detailView];
     
     
     
-    thumbnailView = [[UIScrollView alloc]initWithFrame:CGRectMake(0,768-20-5.5, 1024, 166)];
+    thumbnailView = [[UIScrollView alloc]initWithFrame:CGRectMake(0,self.view.frame.size.height-5.5, 1024, 166)];
     thumbnailView.backgroundColor = [UIColor colorWithRed:0.9843 green:0.9686 blue:0.9294 alpha:1];
     
     m_ScrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, 0, 1024, 166)];
@@ -105,7 +113,7 @@
     
     [thumbnailView addSubview:brownLine];
     btHide = [UIButton buttonWithType:UIButtonTypeCustom];
-    btHide.frame = CGRectMake(453.5, 768-20-5.5-43+1, 150, 43);
+    btHide.frame = CGRectMake(453.5, self.view.frame.size.height-5.5-43+1, 150, 43);
 //    btHide = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     [btHide setImage:[UIImage imageNamed:@"btShow"] forState:UIControlStateNormal];
 //    btHide.frame = CGRectMake(100, 100, 500, 100);
@@ -385,8 +393,8 @@
     [UIView beginAnimations:nil context:context];
     [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
     [UIView setAnimationDuration:0.3];
-    detailView.frame = CGRectMake(0, -583, 1024, 583);
-    btHide.frame = CGRectMake(453.5, 768-166-20-43+1, 150, 43);
+    detailView.frame = CGRectMake(0, -602, 1024, self.view.frame.size.height-166);
+    btHide.frame = CGRectMake(453.5, self.view.frame.size.height-166-43+1, 150, 43);
     [UIView setAnimationDelegate:self];
     [UIView commitAnimations];
     isDetail = NO;
@@ -436,8 +444,8 @@
         [UIView beginAnimations:nil context:context];
         [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
         [UIView setAnimationDuration:0.3];
-        detailView.frame = CGRectMake(0, 0, 1024, 583);
-        btHide.frame = CGRectMake(453.5, 768-20-5.5-43+1, 150, 43);
+        detailView.frame = CGRectMake(0, 0, 1024, self.view.frame.size.height-166);
+        btHide.frame = CGRectMake(453.5, self.view.frame.size.height-43+1, 150, 43);
         [UIView setAnimationDidStopSelector: @selector(loadDetail)];
         [UIView setAnimationDelegate:self];
         [UIView commitAnimations];
@@ -471,13 +479,13 @@
     [UIView setAnimationDuration:0.3];
     if (bt.tag) {
         [btHide setImage:[UIImage imageNamed:@"btShow"] forState:UIControlStateNormal];
-        btHide.frame = CGRectMake(453.5, 768-20-5.5-43+1, 150, 43);
-        thumbnailView.frame = CGRectMake(0,768-20-5.5, 1024, 166);
+        btHide.frame = CGRectMake(453.5, self.view.frame.size.height-5.5-43+1, 150, 43);
+        thumbnailView.frame = CGRectMake(0,self.view.frame.size.height-5.5, 1024, 166);
         btHide.tag = 0;
     }else{
         [btHide setImage:[UIImage imageNamed:@"btHide"] forState:UIControlStateNormal];
-        btHide.frame = CGRectMake(453.5, 768-166-20-43+1, 150, 43);
-        thumbnailView.frame = CGRectMake(0, 768-166-20, 1024, 166);
+        btHide.frame = CGRectMake(453.5, self.view.frame.size.height-43-166+1, 150, 43);
+        thumbnailView.frame = CGRectMake(0, self.view.frame.size.height-166, 1024, 166);
         btHide.tag = 1;
     
     }

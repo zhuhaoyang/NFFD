@@ -20,8 +20,15 @@
     if (self) {
         // Custom initialization
 //        self.view.autoresizesSubviews=YES;
-        self.view.frame = CGRectMake(0, 0, 1024, 768-44-49-20);
-                
+//        self.view.backgroundColor = [UIColor yellowColor];
+        if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"iOS7"] boolValue]) {
+            self.edgesForExtendedLayout = UIRectEdgeNone;
+            self.automaticallyAdjustsScrollViewInsets = NO;
+            self.extendedLayoutIncludesOpaqueBars = NO;
+        }
+        
+//        self.view.frame = CGRectMake(0, 0, 1024, 768-44-49-20);
+        
         UILabel *title = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 200, 44)];
         title.text = @"农发福地";
         title.textAlignment = NSTextAlignmentCenter;
@@ -98,9 +105,12 @@
 {
     UIButton *bt = sender;
     NSUInteger i = bt.tag;
+//    self.view.frame = CGRectMake(0, 0, 1024, 768);
+//    self.navigationController.view.frame = CGRectMake(0, 0, 1024, 768);
     CommodityViewController *m_CommodityViewController = [[CommodityViewController alloc]initWithNibName:@"CommodityViewController" bundle:nil typeData:[arrTypeData objectAtIndex:i]];
+
     [self.navigationController pushViewController:m_CommodityViewController animated:YES];
-    self.navigationController.view.frame = CGRectMake(0, 0, 1024, 768-20);
+
 }
 
 - (void)viewDidLoad
