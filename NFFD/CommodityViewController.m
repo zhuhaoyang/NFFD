@@ -61,7 +61,11 @@
 //    [activity startAnimating];
 //    [self.view addSubview:activity];
 //    [self.view bringSubviewToFront:activity];
-    self.view.frame = CGRectMake(0, 0, 1024, 748);
+    if ([[[NSUserDefaults standardUserDefaults]objectForKey:@"iOS7"] boolValue]) {
+        self.view.frame = CGRectMake(0, 0, 1024, 768);
+    }else{
+        self.view.frame = CGRectMake(0, 0, 1024, 768-20);
+    }
     EGOImageView *imgBpic = [[EGOImageView alloc]init];
     imgBpic.imageURL = [NSURL URLWithString:[dicTypeData objectForKey:@"bpic"]];
     imgBpic.frame = CGRectMake(0, 0, 1024, self.view.frame.size.height);
@@ -146,7 +150,7 @@
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     UIButton *btClose = [UIButton buttonWithType:UIButtonTypeCustom];
     [btClose setImage:[UIImage imageNamed:@"close"] forState:UIControlStateNormal];
-    btClose.frame = CGRectMake(8, 44+8, 47, 47);
+    btClose.frame = CGRectMake(8, 44+8+20, 47, 47);
     [btClose addTarget:self action:@selector(closeDetail) forControlEvents:UIControlEventTouchUpInside];
     [detailView addSubview:btClose];
     

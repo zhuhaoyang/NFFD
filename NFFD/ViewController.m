@@ -137,13 +137,13 @@
     if ([[[NSUserDefaults standardUserDefaults]objectForKey:@"iOS7"] boolValue]) {
         [self.nav1.navigationBar setBackgroundImage:[UIImage imageNamed:@"nav"] forBarPosition:UIBarPositionTop barMetrics:UIBarMetricsDefault];
         [self.nav2.navigationBar setBackgroundImage:[UIImage imageNamed:@"nav"] forBarPosition:UIBarPositionTopAttached barMetrics:UIBarMetricsDefault];
-
+        self.nav2.view.frame = CGRectMake(0, 0, 1024, 768-49);
     }else{
         [self.nav1.navigationBar setBackgroundImage:[UIImage imageNamed:@"nav1"] forBarMetrics:UIBarMetricsDefault];
         [self.nav2.navigationBar setBackgroundImage:[UIImage imageNamed:@"nav1"] forBarMetrics:UIBarMetricsDefault];
+        self.nav2.view.frame = CGRectMake(0, 0, 1024, 768-49-20);
     }
     self.nav1.view.frame = CGRectMake(0, 0, 1024, 768-49);
-    self.nav2.view.frame = CGRectMake(0, 0, 1024, 768-49);
 
 //    self.nav2.view.backgroundColor = [UIColor redColor];
     self.nav1.view.alpha = 0;
@@ -276,7 +276,7 @@
     [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
     [UIView setAnimationDuration:0.3];
     self.toolbar.frame = CGRectMake(0, self.view.frame.size.width, 1024, 49);
-    self.nav2.view.frame = CGRectMake(0, 0, 1024, 768);
+//    self.nav2.view.frame = CGRectMake(0, 0, 1024, 768);
     [UIView setAnimationDelegate:self];
     [UIView commitAnimations];
 
@@ -285,8 +285,11 @@
 - (void)showToolbar
 {
     self.toolbar.frame = CGRectMake(0, self.view.frame.size.width-49, 1024, 49);
-    self.nav2.view.frame = CGRectMake(0, 0, 1024, 768-49);
-
+    if ([[[NSUserDefaults standardUserDefaults]objectForKey:@"iOS7"] boolValue]) {
+        self.nav2.view.frame = CGRectMake(0, 0, 1024, 768-49);
+    }else{
+        self.nav2.view.frame = CGRectMake(0, 0, 1024, 768);
+    }
 }
 
 - (void)dealloc

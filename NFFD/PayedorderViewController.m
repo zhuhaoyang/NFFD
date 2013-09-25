@@ -21,7 +21,15 @@
         // Custom initialization
         UINavigationBar *bar = [[UINavigationBar alloc]initWithFrame:CGRectMake(0, 0, 1024, 44)];
 //        bar.tintColor = [UIColor colorWithRed:0.573 green:0.498 blue:0.431 alpha:1];
-        [bar setBackgroundImage:[UIImage imageNamed:@"nav"] forBarMetrics:UIBarMetricsDefault];
+        
+        if ([[[NSUserDefaults standardUserDefaults]objectForKey:@"iOS7"] boolValue]) {
+            [bar setBackgroundImage:[UIImage imageNamed:@"nav"] forBarPosition:UIBarPositionTop barMetrics:UIBarMetricsDefault];
+            bar.frame = CGRectMake(0, 0, 1024, 64);
+        }else{
+            [bar setBackgroundImage:[UIImage imageNamed:@"nav1"] forBarMetrics:UIBarMetricsDefault];
+            bar.frame = CGRectMake(0, 0, 1024, 44);
+        }
+
         UINavigationItem *titleItem = [[UINavigationItem alloc]init];
         //        UINavigationItem *bar = [UINavigationItem alloc];
         UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -47,7 +55,7 @@
 //        }
 //        arrOid = [[NSArray alloc]initWithObjects:@"E5ED42F35597BE35E040007F01004E0E",@"E5ED42F35597BE35E040007F01004E0E",@"E5ED42F35597BE35E040007F01004E0E",@"E5ED42F35597BE35E040007F01004E0E",@"E5ED42F35597BE35E040007F01004E0E",@"E5ED42F35597BE35E040007F01004E0E",@"E5ED42F35597BE35E040007F01004E0E",@"E5ED42F35597BE35E040007F01004E0E",@"E5ED42F35597BE35E040007F01004E0E",@"E5ED42F35597BE35E040007F01004E0E",@"E5ED42F35597BE35E040007F01004E0E", nil];
         
-        m_tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 44, 1024, 768-20-44) style:UITableViewStylePlain];
+        m_tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, bar.frame.origin.y+bar.frame.size.height, 1024, 768-20-44) style:UITableViewStylePlain];
         m_tableView.delegate = self;
         m_tableView.dataSource = self;
         m_tableView.backgroundColor = [UIColor colorWithRed:0.984 green:0.984 blue:0.984 alpha:1];
